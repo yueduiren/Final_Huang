@@ -1,0 +1,69 @@
+---
+title: "Table1 Producing"
+date: "May 12, 2021"
+output: html_notebook
+---
+This file is just to create the final summary/crosstab table
+
+```{r}
+set.seed(42)
+install.packages("qwraps2")
+library(qwraps2)
+options(qwraps2_markup = "markdown")
+```
+
+## Method1:qwraps2
+
+```{r}
+
+options(qwraps2_markup = "markdown")
+
+
+table_varl<-
+  list("Permannent income"=
+             list("mean(sd)"=  ~qwraps2::mean_sd(PermInc,na_rm = T)), 
+       "Mother < high school" =
+             list("mean(sd)"= ~qwraps2::mean_sd(MomDropout, na_rm = T)),
+        "Mother some college" =
+             list("mean(sd)"= ~qwraps2::mean_sd(MomSomeColl,na_rm = T)),
+        "Maternal AFQT" =
+             list("mean(sd)"= ~qwraps2::mean_sd(AgeAFQT_std, na_rm = T)),
+        "Grandmother’s education" =
+             list("mean(sd)"= ~qwraps2::mean_sd(HighGrade_GMom79, na_rm = T))
+ 
+)
+
+whole1 <- summary_table(dplyr::group_by(black, PreK), table_varl)
+whole2 <- summary_table(dplyr::group_by(nonblack, PreK), table_varl)
+whole3 <- summary_table(dplyr::group_by(black, PreK_FE), table_varl)
+whole4 <- summary_table(dplyr::group_by(nonblack, PreK_FE), table_varl)
+
+whole1
+whole2
+whole3
+whole4
+```
+
+## Method1:table1
+
+```{r}
+
+library(table1)
+table1::label(df_tb3$PermInc) <- "Permannent income"
+table1::label(df_tb3$MomDropout) <- "Mother < high school"
+table1::label(df_tb3$MomSomeColl) <- "Mother some college"
+table1::label(df_tb3$AgeAFQT_std) <- "Maternal AFQT"
+table1::label(df_tb3$HighGrade_GMom79) <- "Grandmother’s education"
+
+
+table1::table1(~PermInc + MomDropout + MomSomeColl +AgeAFQT_std + HighGrade_GMom79 | PreK, data = black)
+table1::table1(~PermInc + MomDropout + MomSomeColl +AgeAFQT_std + HighGrade_GMom79 | PreK, data = nonblack)
+table1::table1(~PermInc + MomDropout + MomSomeColl +AgeAFQT_std + HighGrade_GMom79 | PreK_FE, data = black)
+table1::table1(~PermInc + MomDropout + MomSomeColl +AgeAFQT_std + HighGrade_GMom79 | PreK_FE, data = nonblack)
+
+
+
+
+```
+## 
+Usefull lines would be selected and group in Word document
